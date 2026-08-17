@@ -1,0 +1,26 @@
+# Incident book schema — see README.md for the philosophy.
+metadata:
+  updated: YYYY-MM-DD
+  mother_rule: "Verify at the point of consumption, not the point of production."
+  single_command: "npm run preflight   # every verifier, one entry point"
+  # RATCHET: the count of incidents with automated proof may only go up.
+  # A fraction punishes adding honest manual entries; a count doesn't.
+  automated_proofs_minimum: 0
+
+incidents:
+  - id: kebab-case-slug
+    date: YYYY-MM-DD
+    surface: "where the USER would have seen it (not where the code was)"
+    failure: "what happened, one paragraph, with numbers"
+    blindness: "WHY no verifier caught it — the teaching field"
+    verifier: path/to/check.ts   # or null
+    reason: "required when verifier is null: a declared gap beats an invented green"
+    proof: path/to/test.ts       # the test that FAILS with the bug reinjected; or `manual` + reason
+    cost: "what it cost in money or days, when known"
+
+# Surfaces the user touches, and what watches each. A surface listed with
+# verifier: null is a DECLARED GAP — preferable to a fake green, and it's the
+# to-do list the next work comes from.
+surfaces:
+  - name: "the live landing page"
+    verifier: path/or/null

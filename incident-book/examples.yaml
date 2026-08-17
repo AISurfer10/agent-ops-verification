@@ -1,0 +1,72 @@
+# Real incidents from an AI-agent-operated production system, anonymized.
+# The point of each entry is the `blindness` field: WHY no verifier saw it.
+
+incidents:
+  - id: inline-handler-never-compiled
+    surface: "landing page — analytics and checkout tracking"
+    failure: >
+      An agent-generated onclick attribute contained double quotes inside a
+      double-quoted attribute. The HTML parser truncated it; the ENTIRE
+      handler never compiled. Two days of paid traffic with zero tracked
+      checkout events — read as "the offer doesn't convert".
+    blindness: >
+      Every verifier searched for the STRING `track(` — and it was present,
+      inside the broken attribute. Comparing text is not verifying behavior:
+      if the surface is code that must execute, the check must execute it.
+    fix_class: "verifier now COMPILES every inline handler from the live page"
+
+  - id: beacon-blocked-by-cors
+    surface: "server-side click counting (the backup for an unreliable pixel)"
+    failure: >
+      sendBeacon posted JSON. That content-type triggers a CORS preflight the
+      worker never answered — the browser blocked every send, for the entire
+      life of the feature. navigator.sendBeacon returns true anyway: it means
+      "queued", not "delivered". 514 ad clicks, ONE recorded.
+    blindness: >
+      The check verified the beacon code was PRESENT in the page. Present in
+      the text, inert in the browser — same family as the handler that never
+      compiled. The backup measurement was down the whole time the primary
+      was, which is the one scenario backups exist for.
+    fix_class: "check the CAUSE (content-type is CORS-simple), verified by executing in a real browser"
+
+  - id: the-field-that-answers-the-question
+    surface: "ad account spend — six ads one click away from spending"
+    failure: >
+      Six ads sat in status=ACTIVE, held back only by their paused ad set. The
+      verifier compared `status` to PAUSED and had been red for a day —
+      ignored, because it was red for the wrong reason. The question "can this
+      charge money?" is answered by `effective_status` (ad × adset × campaign),
+      not by any single object's `status`.
+    blindness: >
+      The check read the field that was easiest to fetch, not the field that
+      answers the question. Agents (and tired humans) reach for the first
+      field with a plausible name.
+    fix_class: "every can-it-spend check reads effective_status; plus [].every() got floor counts"
+
+  - id: report-fabricated-zero
+    surface: "the dashboard the operator reads every morning"
+    failure: >
+      The payments API returned 401 (revoked token). The report did
+      `results ?? []` and printed "0 attempts · 0 sales" — the most credible
+      and most expensive lie a dashboard can invent. Zero is indistinguishable
+      from "your business died" and triggers exactly the wrong decisions.
+    blindness: >
+      Error handling written as "don't crash" instead of "don't lie". A report
+      without its source must fail loudly; an empty result on error is not
+      empty data, it's absent data. Absent is not zero.
+    fix_class: "reports throw on non-OK responses and abort on pagination overflow instead of undercounting silently"
+
+  - id: schema-ambiguous-absence
+    surface: "post-purchase email delivery"
+    failure: >
+      A schema migration split mutable state out of an immutable record.
+      Under the OLD schema, a missing state key meant "everything already
+      sent"; under the NEW one, "nothing sent yet". Two legacy records +
+      the new reader = five duplicate emails to real customers, caught in a
+      pre-deploy census that a reviewer model had explicitly requested.
+    blindness: >
+      The reviewer classified the risk as "no affected input exists" — an
+      inherited premise nobody re-measured at the moment it would decide
+      something. The absence of a key does not mean the same thing in two
+      schemas, and a premise is only as fresh as its last measurement.
+    fix_class: "reader is schema-aware; a test reproduces the exact legacy records and asserts ZERO emails"
