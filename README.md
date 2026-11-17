@@ -9,9 +9,9 @@ production system — an autonomous content/commerce pipeline operated with
 **Claude Code** and adversarially reviewed with a second model (**OpenAI
 Codex**) before every deploy.
 
-Built and maintained by **Mauro Spigolon** — AI workflow engineer, Mendoza,
-Argentina (GMT-3). Native Spanish, working English.
-📫 **mauro.spigo@gmail.com** · GitHub: [@AISurfer10](https://github.com/AISurfer10)
+Built and maintained by **Mauro Spigolon**, AI Enablement Lead, Mendoza,
+Argentina (GMT-3). Native Spanish, fluent English.
+Contact: [LinkedIn](https://www.linkedin.com/in/maurospigolon/) · GitHub: [@AISurfer10](https://github.com/AISurfer10)
 
 > **The rule that orders everything: verify at the point of consumption, not
 > the point of production.** A correct config file is not a correct production
@@ -62,5 +62,5 @@ Node.js · Vitest
 
 ## License
 
-MIT. Use it, adapt it, ship it. If it saves you an incident, an email is
-appreciated: **mauro.spigo@gmail.com**
+MIT. Use it, adapt it, ship it. If it saves you an incident, a message on
+[LinkedIn](https://www.linkedin.com/in/maurospigolon/) is appreciated.
