@@ -13,7 +13,7 @@
  * in the ELEVENLABS_API_KEY env var for the transcript (skip with --no-audio;
  * ~$0.01/min when enabled).
  *
- * MIT — Mauro Spigolon <mauro.spigo@gmail.com>
+ * MIT — Mauro Spigolon
  */
 import fs from 'node:fs';
 import path from 'node:path';

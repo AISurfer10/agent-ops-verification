@@ -19,7 +19,7 @@
  * where the bright accent is the readable one. Darkening everywhere just
  * recreates the bug on the other side.
  *
- * MIT — Mauro Spigolon <mauro.spigo@gmail.com>
+ * MIT — Mauro Spigolon
  */
 const toRgb = (hex) => {
   const h = hex.trim().replace('#', '');
